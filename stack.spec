@@ -64,7 +64,7 @@ Package shipping essential scripts to work with %scl Software Collection.
 %package build
 Summary: Package shipping basic build configuration
 Requires: scl-utils-build
-Requires: %{name}-scldevel = %{version}-%{release}
+Requires: %{name}-runtime = %{version}-%{release}
 
 %description build
 Package shipping essential configuration macros to build %scl Software Collection.
@@ -76,6 +76,7 @@ Requires: python27-scldevel
 # devtoolset-3 does not have a -scldevel package
 Requires: devtoolset-3-build
 Requires: %{name}-runtime = %{version}-%{release}
+Requires: %{name}-build   = %{version}-%{release}
 
 %description scldevel
 Package shipping development files, especially useful for development of
