@@ -21,6 +21,36 @@ Requires: /opt/rh/devtoolset-3/enable
 Requires: /opt/rh/python27/enable
 BuildRequires: scl-utils-build
 
+Requires: bison
+Requires: curl
+Requires: blas
+Requires: bzip2-devel
+Requires: bzip2
+Requires: flex
+Requires: fontconfig
+Requires: freetype-devel
+Requires: devtoolset-3-gcc-gfortran >= 4.9
+Requires: devtoolset-3-gcc-c++ >= 4.9
+Requires: gcc-gfortran
+Requires: devtoolset-3-git >= 1.9
+Requires: libuuid-devel
+Requires: libXext
+Requires: libXrender
+Requires: libXt-devel
+Requires: make
+Requires: openssl-devel
+Requires: patch
+Requires: perl
+Requires: readline-devel
+Requires: zlib-devel
+Requires: ncurses-devel
+Requires: cmake
+Requires: glib2-devel
+Requires: gettext
+Requires: libcurl-devel
+Requires: perl-ExtUtils-MakeMaker
+Requires: java-1.7.0-openjdk
+
 %description
 This is the main package for %scl Software Collection.
 
