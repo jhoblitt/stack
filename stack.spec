@@ -12,11 +12,9 @@
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 3
+Version: 4
 Release: 1%{?dist}
 License: GPLv2+
-#Requires: %scl_require devtoolset-3
-#Requires: %scl_require python27
 Requires: /opt/rh/devtoolset-3/enable
 Requires: /opt/rh/python27/enable
 BuildRequires: scl-utils-build
@@ -85,6 +83,7 @@ packages depending on %scl Software Collection.
 %prep
 %setup -c -T
 
+%build
 %install
 %scl_install
 
@@ -103,10 +102,6 @@ cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel << E
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{scl_prefix}
 EOF
-
-# Install the generated man page
-#mkdir -p %{buildroot}%{_mandir}/man7/
-#install -p -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/
 
 %files
 
