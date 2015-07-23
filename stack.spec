@@ -25,7 +25,7 @@
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 10
+Version: 11
 Release: 1%{?dist}
 License: GPLv2+
 #Requires: /opt/rh/devtoolset-3/enable
@@ -109,7 +109,7 @@ cat >> %{buildroot}%{_scl_scripts}/enable << EOF
 . scl_source enable %{scl_python}
 . scl_source enable devtoolset-3
 
-export PYTHONPATH=%{_scl_sitelib}${PYTHONPATH:+:${PYTHONPATH}}
+export PYTHONPATH=%{_scl_sitelib}\${PYTHONPATH:+:\${PYTHONPATH}}
 export PATH=%{_bindir}\${PATH:+:\${PATH}}
 export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\$MANPATH
@@ -148,6 +148,9 @@ EOF
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 11-1
+- 
+
 * Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 10-1
 - 
 
