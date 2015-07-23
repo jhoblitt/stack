@@ -20,11 +20,11 @@
 %global __python_requires %{%{scl_python}_python_requires}
 
 # The directory for site packages for this Software Collection
-%global %{scl}_sitelib %(echo %{python27python_sitelib} | sed 's|%{scl_python}|%{scl}|')
+%global %_scl_sitelib %(echo %{python27python_sitelib} | sed 's|%{scl_python}|%{scl}|')
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 6
+Version: 7
 Release: 1%{?dist}
 License: GPLv2+
 #Requires: /opt/rh/devtoolset-3/enable
@@ -109,14 +109,14 @@ cat >> %{buildroot}%{_scl_scripts}/enable << EOF
 . scl_source enable %{scl_python}
 . scl_source enable devtoolset-3
 
-export PYTHONPATH=%{%{scl}_sitelib}${PYTHONPATH:+:${PYTHONPATH}}
+export PYTHONPATH=%{_scl_sitelib}${PYTHONPATH:+:${PYTHONPATH}}
 export PATH=%{_bindir}\${PATH:+:\${PATH}}
 export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\$MANPATH
 export PKG_CONFIG_PATH=%{_libdir}/pkgconfig\${PKG_CONFIG_PATH:+:\${PKG_CONFIG_PATH}}
 EOF
 
-mkdir -p %{buildroot}%{%{scl}_sitelib}
+mkdir -p %{buildroot}%{_scl_sitelib}
 
 cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config << EOF
 %%scl_package_override() %%{expand:%{?python27_os_install_post:%%global __os_install_post %%python27_os_install_post}
@@ -124,8 +124,8 @@ cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config << EOF
 %%global __python_provides %%python27_python_provides
 %%global __python %python27__python
 %%global __python2 %python27__python
-%%global python_sitelib %%{scl}_sitelib
-%%global python2_sitelib %%{scl}_sitelib
+%%global python_sitelib %_scl_sitelib
+%%global python2_sitelib %_scl_sitelib
 }
 EOF
 
@@ -139,7 +139,7 @@ EOF
 
 %files runtime -f filelist
 %scl_files
-%%{scl}_sitelib
+%_scl_sitelib
 
 %files build
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
@@ -148,6 +148,9 @@ EOF
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 7-1
+- 
+
 * Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 6-1
 - 
 
