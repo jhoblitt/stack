@@ -10,14 +10,34 @@
 %global _scl_prefix /opt/%{scl_name_prefix}
 %scl_package %scl
 
+# Defaults for the values for the python27 Software Collection. These
+# will be used when python27-scldevel is not in the buildroot
+%{!?scl_python:%global scl_python python27}
+%{!?scl_prefix_python:%global scl_prefix_python %{scl_python}-}
+
+# Only for this build, we need to override default __os_install_post, because
+# the default one would find /opt/.../lib/python2.7/ and rpmbuild would
+# try to bytecompile with the system /usr/bin/python2.7 (which doesn't exist)
+%global __os_install_post %{%{scl_python}_os_install_post}
+# Similarly, override __python_requires for automatic dependency generator
+%global __python_requires %{%{scl_python}_python_requires}
+
+# The directory for site packages for this Software Collection
+%global %{scl}_sitelib %(echo %{python27python_sitelib} | sed 's|%{scl_python}|%{scl}|')
+
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 4
+Version: 5
 Release: 1%{?dist}
 License: GPLv2+
-Requires: /opt/rh/devtoolset-3/enable
-Requires: /opt/rh/python27/enable
+#Requires: /opt/rh/devtoolset-3/enable
+#Requires: /opt/rh/python27/enable
 BuildRequires: scl-utils-build
+BuildRequires: %{scl_prefix_python}scldevel
+# Require python27-python-devel, we will need macros from that package
+BuildRequires: %{scl_prefix_python}python-devel
+Requires: %{scl_prefix_python}python-versiontools
+
 
 Requires: bison
 Requires: curl
@@ -55,6 +75,9 @@ This is the main package for %scl Software Collection.
 %package runtime
 Summary: Package that handles %scl Software Collection.
 Requires: scl-utils
+Requires: %{scl_prefix_python}runtime
+Requires: devtoolset-3-runtime
+
 
 %description runtime
 Package shipping essential scripts to work with %scl Software Collection.
@@ -62,7 +85,9 @@ Package shipping essential scripts to work with %scl Software Collection.
 %package build
 Summary: Package shipping basic build configuration
 Requires: scl-utils-build
-Requires: %{name}-runtime = %{version}-%{release}
+Requires: %{scl_prefix_python}scldevel
+# devtoolset-3 does not have a -scldevel package
+Requires: devtoolset-3-build
 
 %description build
 Package shipping essential configuration macros to build %scl Software Collection.
@@ -70,10 +95,6 @@ Package shipping essential configuration macros to build %scl Software Collectio
 # This is only needed when you want to provide an optional scldevel subpackage
 %package scldevel
 Summary: Package shipping development files for %scl
-Requires: python27-scldevel
-# devtoolset-3 does not have a -scldevel package
-Requires: devtoolset-3-build
-Requires: %{name}-runtime = %{version}-%{release}
 Requires: %{name}-build   = %{version}-%{release}
 
 %description scldevel
@@ -88,13 +109,27 @@ packages depending on %scl Software Collection.
 %scl_install
 
 cat >> %{buildroot}%{_scl_scripts}/enable << EOF
+. scl_source enable %{scl_python}
 . scl_source enable devtoolset-3
-. scl_source enable python27
 
+export PYTHONPATH=%{%{scl}_sitelib}${PYTHONPATH:+:${PYTHONPATH}}
 export PATH=%{_bindir}\${PATH:+:\${PATH}}
 export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\$MANPATH
 export PKG_CONFIG_PATH=%{_libdir}/pkgconfig\${PKG_CONFIG_PATH:+:\${PKG_CONFIG_PATH}}
+EOF
+
+mkdir -p %{buildroot}%{%{scl}_sitelib}
+
+cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config << EOF
+%%scl_package_override() %%{expand:%{?python27_os_install_post:%%global __os_install_post %%python27_os_install_post}
+%%global __python_requires %%python27_python_requires
+%%global __python_provides %%python27_python_provides
+%%global __python %python27__python
+%%global __python2 %python27__python
+%%global python_sitelib %%{scl}_sitelib
+%%global python2_sitelib %%{scl}_sitelib
+}
 EOF
 
 # This is only needed when you want to provide an optional scldevel subpackage
@@ -107,6 +142,7 @@ EOF
 
 %files runtime -f filelist
 %scl_files
+%{%{scl}_sitelib}
 
 %files build
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
@@ -115,6 +151,9 @@ EOF
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 5-1
+- 
+
 * Wed Jul 22 2015 Joshua Hoblitt <josh@hoblitt.com> 4-1
 - new package built with tito
 
