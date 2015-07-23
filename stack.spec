@@ -4,9 +4,6 @@
 
 %global scl %{scl_name_prefix}-%{scl_name_base}%{scl_name_version}
 
-# Optional but recommended: define nfsmountable
-%global nfsmountable 1
-
 %global _scl_prefix /opt/%{scl_name_prefix}
 %scl_package %scl
 
@@ -27,7 +24,7 @@
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 5
+Version: 6
 Release: 1%{?dist}
 License: GPLv2+
 #Requires: /opt/rh/devtoolset-3/enable
@@ -142,7 +139,7 @@ EOF
 
 %files runtime -f filelist
 %scl_files
-%{%{scl}_sitelib}
+%%{scl}_sitelib
 
 %files build
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
@@ -151,6 +148,9 @@ EOF
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 6-1
+- 
+
 * Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 5-1
 - 
 
