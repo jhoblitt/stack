@@ -20,11 +20,12 @@
 %global __python_requires %{%{scl_python}_python_requires}
 
 # The directory for site packages for this Software Collection
-%global %_scl_sitelib %(echo %{python27python_sitelib} | sed 's|%{scl_python}|%{scl}|')
+# python27python_sitelib is provided by python27-python-devel
+%define %_scl_sitelib %(echo %{python27python_sitelib} | sed 's|%{scl_python}|%{scl}|')
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 7
+Version: 8
 Release: 1%{?dist}
 License: GPLv2+
 #Requires: /opt/rh/devtoolset-3/enable
@@ -148,6 +149,9 @@ EOF
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 8-1
+- 
+
 * Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 7-1
 - 
 
