@@ -25,7 +25,7 @@
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 9
+Version: 10
 Release: 1%{?dist}
 License: GPLv2+
 #Requires: /opt/rh/devtoolset-3/enable
@@ -34,7 +34,6 @@ BuildRequires: scl-utils-build
 BuildRequires: %{scl_prefix_python}scldevel
 # Require python27-python-devel, we will need macros from that package
 BuildRequires: %{scl_prefix_python}python-devel
-Requires: %{scl_prefix_python}python-versiontools
 
 
 Requires: bison
@@ -149,6 +148,9 @@ EOF
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 10-1
+- 
+
 * Thu Jul 23 2015 Joshua Hoblitt <josh@hoblitt.com> 9-1
 - 
 
